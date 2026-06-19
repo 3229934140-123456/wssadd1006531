@@ -1,0 +1,87 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-sm;
+}
+
+.mainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.label {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.subLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.countBtn {
+  @include button-reset;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+  font-size: $font-size-xl;
+  color: $color-text-secondary;
+  transition: all $transition-fast;
+  &:active {
+    background: $color-primary-light;
+    color: $color-text-white;
+    opacity: 0.9;
+    transform: scale(0.95);
+  }
+}
+
+.btnDisable {
+  opacity: 0.5;
+}
+
+.countDisplay {
+  width: 80rpx;
+  text-align: center;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+  min-height: 48rpx;
+  line-height: 48rpx;
+}
+
+.totalAmount {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 2rpx dashed $color-divider;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amountRight {
+  font-size: $font-size-md;
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+}

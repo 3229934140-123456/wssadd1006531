@@ -1,0 +1,294 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdfa 100%);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  padding: $spacing-lg;
+  border: 2rpx solid rgba(32, 201, 151, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2rpx dashed $color-border;
+  margin-bottom: $spacing-lg;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.clinicName {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+}
+
+.reportTitle {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin-top: $spacing-xs;
+}
+
+.headerRight {
+  text-align: right;
+}
+
+.dateText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.shiftTag {
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-top: $spacing-xs;
+}
+
+.section {
+  margin-bottom: $spacing-lg;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: $radius-round;
+  background: $color-primary;
+  margin-right: $spacing-sm;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-sm;
+}
+
+.summaryItem {
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.summaryLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}
+
+.summaryValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.summaryValuePositive {
+  color: $color-text-success;
+}
+
+.summaryValueNegative {
+  color: $color-text-error;
+}
+
+.patientList {
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.patientItem {
+  padding: $spacing-md;
+  border-bottom: 2rpx solid $color-divider;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.patientRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.patientName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.patientAmount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-error;
+}
+
+.patientTreatment {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.statusTag {
+  display: inline-block;
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-xs;
+  font-size: 20rpx;
+  margin-left: $spacing-sm;
+}
+
+.statusConfirmed {
+  background: $color-success-light;
+  color: $color-text-success;
+}
+
+.statusPending {
+  background: $color-warning-light;
+  color: $color-text-warning;
+}
+
+.statusIssue {
+  background: $color-error-light;
+  color: $color-text-error;
+}
+
+.issueItem {
+  background: $color-warning-light;
+  border: 2rpx solid $color-border-warning;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+}
+
+.issueHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.issueType {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-warning;
+}
+
+.issueAmount {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-error;
+}
+
+.issueDesc {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.stepStatusList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.stepStatusItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+}
+
+.stepIcon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.iconDone {
+  background: $color-success;
+}
+
+.iconWarning {
+  background: $color-warning;
+}
+
+.stepName {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.stepResult {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.footer {
+  padding-top: $spacing-lg;
+  margin-top: $spacing-lg;
+  border-top: 2rpx dashed $color-border;
+}
+
+.signatureRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: $spacing-sm;
+}
+
+.signatureBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signatureLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}
+
+.signatureName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+  padding: $spacing-sm $spacing-lg;
+  border: 2rpx solid $color-primary-light;
+  border-radius: $radius-md;
+  background: rgba(32, 201, 151, 0.05);
+}
+
+.timeRow {
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}

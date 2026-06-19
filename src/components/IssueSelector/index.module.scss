@@ -1,0 +1,180 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.tagItem {
+  @include button-reset;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  border: 2rpx solid transparent;
+  transition: all $transition-fast;
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.tagSelected {
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  border-color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.inputArea {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  min-height: 160rpx;
+  border: 2rpx solid $color-border;
+}
+
+.placeholder {
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+  line-height: $line-height-loose;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 160rpx;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  line-height: $line-height-loose;
+  background: transparent;
+}
+
+.amountRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  border: 2rpx solid $color-border;
+}
+
+.amountLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.amountInput {
+  flex: 1;
+  margin-left: $spacing-md;
+  text-align: right;
+  font-size: $font-size-md;
+  color: $color-primary-dark;
+  font-weight: $font-weight-medium;
+}
+
+.addBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-md;
+  border-radius: $radius-button;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  transition: all $transition-fast;
+  &:active {
+    background: $color-primary-dark;
+    transform: scale(0.98);
+    opacity: 0.95;
+  }
+}
+
+.addBtnDisabled {
+  background: $color-step-pending;
+  &:active {
+    background: $color-step-pending;
+    transform: none;
+  }
+}
+
+.existingList {
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 2rpx solid $color-divider;
+}
+
+.existingTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.existingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: $spacing-md;
+  background: $color-warning-light;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+  border: 2rpx solid $color-border-warning;
+}
+
+.existingInfo {
+  flex: 1;
+}
+
+.existingType {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-warning;
+  margin-bottom: $spacing-xs;
+}
+
+.existingDesc {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.existingAmount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-error;
+  margin-top: $spacing-xs;
+}
+
+.removeBtn {
+  @include button-reset;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-round;
+  background: rgba(239, 68, 68, 0.1);
+  color: $color-error;
+  font-size: $font-size-md;
+  margin-left: $spacing-sm;
+  &:active {
+    background: rgba(239, 68, 68, 0.2);
+  }
+}

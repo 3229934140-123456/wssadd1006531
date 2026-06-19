@@ -1,0 +1,102 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.stepsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.stepCircle {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-sm;
+  transition: all $transition-base;
+}
+
+.circlePending {
+  background: $color-step-pending;
+  color: $color-text-white;
+}
+
+.circleActive {
+  background: $color-primary;
+  color: $color-text-white;
+  box-shadow: 0 0 0 8rpx rgba(32, 201, 151, 0.15);
+}
+
+.circleDone {
+  background: $color-step-done;
+  color: $color-text-white;
+}
+
+.circleWarning {
+  background: $color-warning;
+  color: $color-text-white;
+}
+
+.stepLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+}
+
+.stepLabelActive {
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+}
+
+.connector {
+  position: absolute;
+  top: 32rpx;
+  left: calc(50% + 40rpx);
+  right: calc(-50% + 40rpx);
+  height: 4rpx;
+  background: $color-step-pending;
+}
+
+.connectorDone {
+  background: $color-step-done;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 2rpx solid $color-divider;
+}
+
+.currentTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.currentHint {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

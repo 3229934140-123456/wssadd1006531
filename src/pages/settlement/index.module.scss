@@ -1,0 +1,522 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  padding: $page-padding;
+  padding-bottom: calc(#{$page-padding} + 180rpx);
+  min-height: 100vh;
+}
+
+.stepContent {
+  margin-bottom: $spacing-md;
+}
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.cardTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+}
+
+.cardTitleIcon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-sm;
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}
+
+.patientItem {
+  padding: $spacing-md;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+  transition: all $transition-fast;
+}
+
+.patientItemConfirmed {
+  border-color: $color-border-success;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.patientItemIssue {
+  border-color: $color-border-error;
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+}
+
+.patientHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.patientInfo {
+  flex: 1;
+}
+
+.patientName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.patientTreatment {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-tight;
+}
+
+.patientAmountWrap {
+  text-align: right;
+  flex-shrink: 0;
+  margin-left: $spacing-md;
+}
+
+.patientFullAmount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-decoration: line-through;
+  margin-bottom: 4rpx;
+}
+
+.patientUnpaid {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-error;
+}
+
+.patientPaid {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-success;
+}
+
+.patientMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  padding-top: $spacing-sm;
+  border-top: 2rpx dashed $color-divider;
+}
+
+.patientActions {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 2rpx dashed $color-divider;
+}
+
+.actionBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-sm;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border: 2rpx solid transparent;
+  transition: all $transition-fast;
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.btnOutline {
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  border-color: $color-border;
+}
+
+.btnPrimary {
+  background: $color-primary;
+  color: $color-text-white;
+}
+
+.btnPrimaryActive {
+  background: $color-success;
+  color: $color-text-white;
+}
+
+.btnDanger {
+  background: $color-error-light;
+  color: $color-text-error;
+  border-color: $color-border-error;
+}
+
+.btnDangerActive {
+  background: $color-error;
+  color: $color-text-white;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-top: 2rpx solid $color-divider;
+  margin-top: $spacing-sm;
+}
+
+.summaryLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.summaryValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.summaryPositive { color: $color-text-success; }
+.summaryNegative { color: $color-text-error; }
+
+.tipBox {
+  background: $color-info-light;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: flex-start;
+}
+
+.tipIcon {
+  margin-right: $spacing-sm;
+  font-size: $font-size-md;
+}
+
+.tipText {
+  font-size: $font-size-xs;
+  color: $color-info;
+  line-height: $line-height-loose;
+  flex: 1;
+}
+
+.denominationTitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+  font-weight: $font-weight-medium;
+  padding-left: $spacing-xs;
+  border-left: 6rpx solid $color-primary;
+}
+
+.cashTotalCard {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  color: $color-text-white;
+  margin-bottom: $spacing-md;
+  box-shadow: 0 6rpx 20rpx rgba(16, 185, 129, 0.2);
+}
+
+.cashTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cashTotalLabel {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}
+
+.cashTotalValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+}
+
+.cashDiffValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-sm;
+}
+
+.paymentSection {
+  margin-bottom: $spacing-lg;
+}
+
+.paymentRow {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+}
+
+.paymentIcon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  font-size: $font-size-lg;
+  flex-shrink: 0;
+}
+
+.iconWechat { background: #DCFCE7; color: #16A34A; }
+.iconAlipay { background: #DBEAFE; color: #2563EB; }
+.iconPos { background: #FEF3C7; color: #D97706; }
+
+.paymentInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.paymentName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.paymentSystem {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.paymentInputWrap {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.paymentInput {
+  width: 180rpx;
+  height: 64rpx;
+  background: $color-bg-page;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-sm;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  text-align: right;
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+}
+
+.paymentDiff {
+  margin-top: $spacing-xs;
+  padding-top: $spacing-xs;
+  border-top: 2rpx dashed $color-divider;
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-xs;
+}
+
+.diffNormal { color: $color-text-success; }
+.diffWarning { color: $color-text-warning; }
+.diffError { color: $color-text-error; }
+
+.voucherGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.voucherItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $color-bg-page;
+  border: 2rpx dashed $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg $spacing-sm;
+  transition: all $transition-fast;
+  &:active {
+    border-color: $color-primary;
+    background: $color-bg-step-active;
+  }
+}
+
+.voucherUploaded {
+  background: $color-success-light;
+  border: 2rpx solid $color-border-success;
+  border-style: solid;
+}
+
+.voucherIcon {
+  font-size: 48rpx;
+  margin-bottom: $spacing-sm;
+}
+
+.voucherName {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-xs;
+}
+
+.voucherCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.voucherUploaded .voucherName {
+  color: $color-text-success;
+}
+.voucherUploaded .voucherCount {
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+}
+
+.receiptRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+}
+
+.receiptLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.receiptInput {
+  flex: 1;
+  margin-left: $spacing-md;
+  height: 64rpx;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-sm;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-family: 'Courier New', monospace;
+}
+
+.signatureCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xl;
+}
+
+.signatureInput {
+  width: 100%;
+  height: 96rpx;
+  background: $color-bg-page;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  padding: 0 $spacing-lg;
+  font-size: $font-size-md;
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+.signatureHint {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+  line-height: $line-height-loose;
+}
+
+.bottomBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: $spacing-lg $page-padding;
+  padding-bottom: calc(#{$spacing-lg} + env(safe-area-inset-bottom));
+  background: $color-bg-card;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  display: flex;
+  gap: $spacing-md;
+  z-index: 100;
+}
+
+.bottomBtn {
+  @include button-reset;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  transition: all $transition-fast;
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.95;
+  }
+}
+
+.btnPrev {
+  width: 180rpx;
+  background: $color-bg-hover;
+  color: $color-text-secondary;
+  border: 2rpx solid $color-border;
+}
+
+.btnNext {
+  flex: 1;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: $color-text-white;
+  box-shadow: 0 4rpx 16rpx rgba(16, 185, 129, 0.3);
+}
+
+.btnNextDisabled {
+  background: $color-step-pending;
+  box-shadow: none;
+}
+
+.resetBanner {
+  background: $color-warning-light;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resetBannerText {
+  font-size: $font-size-sm;
+  color: $color-text-warning;
+  font-weight: $font-weight-medium;
+}
+
+.resetBtn {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.8);
+  color: $color-text-warning;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  &:active {
+    opacity: 0.9;
+  }
+}

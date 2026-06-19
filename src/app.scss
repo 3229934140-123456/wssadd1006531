@@ -1,0 +1,20 @@
+@use '@/styles/compat.scss';
+@use '@/styles/variables.scss' as *;
+
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  font-size: $font-size-md;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  background: linear-gradient(180deg, $color-bg-page-gradient-start 0%, $color-bg-page 100%);
+  min-height: 100vh;
+}
+
+page, .taro-page {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text {
+  box-sizing: border-box;
+}

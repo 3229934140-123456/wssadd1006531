@@ -1,0 +1,54 @@
+// ============================================
+// 口腔诊所日清对账 - 主题配色变量
+// 视觉风格：轻松专业医疗风（薄荷绿主色）
+// ============================================
+
+// 品牌主题色：薄荷绿医疗系
+$color-primary: #20C997;
+$color-primary-light: #63E6BE;
+$color-primary-dark: #10B981;
+
+// 功能色（语义化）
+$color-success: #10B981;
+$color-success-light: #D1FAE5;
+$color-warning: #F59E0B;
+$color-warning-light: #FEF3C7;
+$color-error: #EF4444;
+$color-error-light: #FEE2E2;
+$color-info: #3B82F6;
+$color-info-light: #DBEAFE;
+
+// 背景色
+$color-bg-page: #F7FAFC;
+$color-bg-page-gradient-start: #F0FDF9;
+$color-bg-card: #FFFFFF;
+$color-bg-hover: #F9FAFB;
+$color-bg-step-active: #ECFDF5;
+
+// 文本色
+$color-text-primary: #1F2937;
+$color-text-secondary: #4B5563;
+$color-text-tertiary: #9CA3AF;
+$color-text-disabled: #C9CDD4;
+$color-text-white: #FFFFFF;
+$color-text-success: #059669;
+$color-text-warning: #D97706;
+$color-text-error: #DC2626;
+
+// 边框色
+$color-border: #E5E7EB;
+$color-divider: #F3F4F6;
+$color-border-success: #6EE7B7;
+$color-border-warning: #FCD34D;
+$color-border-error: #FCA5A5;
+
+// 步骤状态色
+$color-step-done: #10B981;
+$color-step-active: #20C997;
+$color-step-pending: #D1D5DB;
+
+// 业务相关变量
+$color-amount-positive: #10B981;
+$color-amount-negative: #EF4444;
+$color-tag-bg: #F3F4F6;
+$color-tag-text: #4B5563;

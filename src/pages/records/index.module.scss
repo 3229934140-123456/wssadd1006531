@@ -1,0 +1,211 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  padding: $page-padding;
+  padding-bottom: calc(#{$page-padding} + 120rpx);
+  min-height: 100vh;
+}
+
+.filterBar {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  @include button-reset;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  border: 2rpx solid $color-border;
+  transition: all $transition-fast;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.filterBtnActive {
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  border-color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.summaryHeader {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  color: $color-text-white;
+  margin-bottom: $spacing-md;
+  box-shadow: 0 6rpx 20rpx rgba(16, 185, 129, 0.2);
+}
+
+.summaryTitle {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+  margin-bottom: $spacing-md;
+}
+
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-xs;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  opacity: 0.85;
+}
+
+.recordCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-fast;
+  &:active {
+    transform: scale(0.99);
+    box-shadow: none;
+  }
+}
+
+.recordHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+}
+
+.recordDate {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.recordShift {
+  padding: $spacing-xs $spacing-md;
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.recordOperator {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-md;
+}
+
+.recordGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 2rpx solid $color-divider;
+  padding-bottom: $spacing-md;
+  border-bottom: 2rpx solid $color-divider;
+  margin-bottom: $spacing-md;
+}
+
+.recordStat {
+  display: flex;
+  flex-direction: column;
+}
+
+.recordStatLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: 4rpx;
+}
+
+.recordStatValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.valuePositive { color: $color-text-success; }
+.valueNegative { color: $color-text-error; }
+
+.recordFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.issueBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.issueBadgeNone {
+  background: $color-success-light;
+  color: $color-text-success;
+}
+
+.issueBadgeHas {
+  background: $color-warning-light;
+  color: $color-text-warning;
+}
+
+.detailBtn {
+  @include button-reset;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 2rpx 8rpx rgba(16, 185, 129, 0.2);
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.96);
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl * 2;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  opacity: 0.3;
+  margin-bottom: $spacing-lg;
+}
+
+.emptyTitle {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.emptyDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}

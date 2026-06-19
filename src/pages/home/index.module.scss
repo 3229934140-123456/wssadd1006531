@@ -1,0 +1,288 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  padding: $page-padding;
+  padding-bottom: calc(#{$page-padding} + 120rpx);
+  min-height: 100vh;
+}
+
+.greetingCard {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  color: $color-text-white;
+  margin-bottom: $spacing-md;
+  box-shadow: 0 8rpx 24rpx rgba(16, 185, 129, 0.25);
+}
+
+.greetingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-xl;
+}
+
+.greetingLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.greetingText {
+  font-size: $font-size-md;
+  opacity: 0.9;
+  margin-bottom: $spacing-xs;
+}
+
+.userName {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-xs;
+}
+
+.clinicText {
+  font-size: $font-size-sm;
+  opacity: 0.85;
+}
+
+.clinicBadge {
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  backdrop-filter: blur(10px);
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-xs;
+  backdrop-filter: blur(10px);
+}
+
+.statValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-xs;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  opacity: 0.85;
+}
+
+.startCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  border: 2rpx solid rgba(32, 201, 151, 0.1);
+}
+
+.startHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.startTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.startBadge {
+  padding: $spacing-xs $spacing-md;
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.startDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-lg;
+}
+
+.startSteps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.stepMini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.stepMiniNum {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-round;
+  background: $color-step-pending;
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-xs;
+}
+
+.stepMiniLabel {
+  font-size: 20rpx;
+  color: $color-text-tertiary;
+  white-space: nowrap;
+}
+
+.startBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 4rpx 16rpx rgba(16, 185, 129, 0.3);
+  transition: all $transition-fast;
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.95;
+  }
+}
+
+.sectionTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding: 0 $spacing-xs;
+}
+
+.sectionText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionAction {
+  font-size: $font-size-sm;
+  color: $color-primary-dark;
+  font-weight: $font-weight-medium;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.quickItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-xs;
+  box-shadow: $shadow-card;
+  transition: all $transition-fast;
+  &:active {
+    transform: scale(0.96);
+    box-shadow: none;
+  }
+}
+
+.quickIcon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-sm;
+  font-size: $font-size-xl;
+}
+
+.icon1 { background: $color-success-light; color: $color-text-success; }
+.icon2 { background: $color-info-light; color: $color-info; }
+.icon3 { background: $color-warning-light; color: $color-text-warning; }
+.icon4 { background: $color-error-light; color: $color-text-error; }
+
+.quickLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  text-align: center;
+}
+
+.noticeCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.noticeItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md 0;
+  border-bottom: 2rpx solid $color-divider;
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.noticeDot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-md;
+  margin-top: 10rpx;
+  flex-shrink: 0;
+}
+
+.dotUrgent { background: $color-error; }
+.dotNormal { background: $color-primary; }
+.dotInfo { background: $color-info; }
+
+.noticeContent {
+  flex: 1;
+}
+
+.noticeTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+  line-height: $line-height-tight;
+}
+
+.noticeMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}

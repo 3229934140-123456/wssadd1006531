@@ -1,0 +1,116 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+}
+
+.normal {
+  background: $color-success-light;
+  border: 2rpx solid $color-border-success;
+}
+
+.warning {
+  background: $color-warning-light;
+  border: 2rpx solid $color-border-warning;
+}
+
+.error {
+  background: $color-error-light;
+  border: 2rpx solid $color-border-error;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.icon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-sm;
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.iconNormal {
+  background: $color-success;
+}
+
+.iconWarning {
+  background: $color-warning;
+}
+
+.iconError {
+  background: $color-error;
+}
+
+.title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.titleNormal {
+  color: $color-text-success;
+}
+
+.titleWarning {
+  color: $color-text-warning;
+}
+
+.titleError {
+  color: $color-text-error;
+}
+
+.message {
+  font-size: $font-size-sm;
+  line-height: $line-height-loose;
+}
+
+.messageNormal {
+  color: $color-text-success;
+}
+
+.messageWarning {
+  color: $color-text-warning;
+}
+
+.messageError {
+  color: $color-text-error;
+}
+
+.details {
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 2rpx dashed rgba(255, 255, 255, 0.8);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+  font-size: $font-size-sm;
+}
+
+.detailLabel {
+  opacity: 0.8;
+}
+
+.detailValue {
+  font-weight: $font-weight-medium;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
