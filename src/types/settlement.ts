@@ -80,6 +80,7 @@ export interface IssueItem {
   description: string
   relatedPatientId?: string
   patientName?: string
+  patientNote?: string
   amount?: number
   createdAt: string
   handedOver: boolean

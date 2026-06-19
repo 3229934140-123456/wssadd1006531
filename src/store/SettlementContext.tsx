@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react'
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
 import {
   SettlementState,
@@ -152,6 +152,7 @@ export const SettlementProvider: React.FC<{ children: ReactNode }> = ({ children
             description: reason,
             relatedPatientId: id,
             patientName: patient.name,
+            patientNote: patient.note || undefined,
             amount: patient.unpaidAmount > 0 ? patient.unpaidAmount : undefined,
             createdAt: new Date().toISOString(),
             handedOver: true,
@@ -161,7 +162,7 @@ export const SettlementProvider: React.FC<{ children: ReactNode }> = ({ children
         } else {
           newIssues = newIssues.map(i =>
             i.id === existingIssue.id
-              ? { ...i, type: issueType, description: reason, amount: patient.unpaidAmount > 0 ? patient.unpaidAmount : undefined }
+              ? { ...i, type: issueType, description: reason, amount: patient.unpaidAmount > 0 ? patient.unpaidAmount : undefined, patientNote: patient.note || undefined }
               : i
           )
         }

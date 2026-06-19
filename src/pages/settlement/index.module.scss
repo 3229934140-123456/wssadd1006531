@@ -578,6 +578,12 @@
   color: $color-text-warning;
 }
 
+.badgeNeutral {
+  background: $color-bg-page;
+  color: $color-text-tertiary;
+  border: 2rpx solid $color-border;
+}
+
 .thumbsRow {
   display: flex;
   flex-wrap: wrap;

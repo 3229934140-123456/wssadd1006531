@@ -205,11 +205,18 @@ const ReportCard: React.FC<ReportCardProps> = ({
                 )}
               </View>
               <Text className={styles.issueDesc}>{issue.description}</Text>
-              {issue.relatedPatientId && (
+              {(issue.patientNote || issue.relatedPatientId) && (
                 <View className={styles.issueMeta}>
-                  <Text className={styles.issueMetaText}>
-                    🔗 关联患者ID：{issue.relatedPatientId}
-                  </Text>
+                  {issue.patientNote && (
+                    <Text className={styles.issueMetaText}>
+                      � 备注：{issue.patientNote}
+                    </Text>
+                  )}
+                  {issue.relatedPatientId && !issue.patientNote && (
+                    <Text className={styles.issueMetaText}>
+                      �🔗 关联患者ID：{issue.relatedPatientId}
+                    </Text>
+                  )}
                 </View>
               )}
             </View>

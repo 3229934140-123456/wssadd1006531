@@ -434,7 +434,9 @@ const Step3Voucher: React.FC = () => {
     )
   }
 
-  const allPassed = totalAmountDiff === 0 && totalCountDiff === 0
+  const allPassed = pc.wechatDiff === 0 && pc.wechatCountDiff === 0
+    && pc.alipayDiff === 0 && pc.alipayCountDiff === 0
+    && pc.posDiff === 0 && pc.posCountDiff === 0
 
   return (
     <View>
@@ -453,7 +455,14 @@ const Step3Voucher: React.FC = () => {
 
         {voucherGroups.map(group => {
           const count = getVoucherCountByType(group.type)
-          const complete = group.systemCount === 0 ? true : count >= group.systemCount
+          const hasRequiredCount = group.systemCount > 0
+          const complete = hasRequiredCount ? count >= group.systemCount : count > 0
+          const badgeText = hasRequiredCount
+            ? (complete ? '✓ 齐全' : `${count}/${group.systemCount}`)
+            : (count > 0 ? `已传 ${count} 张` : '未上传')
+          const badgeClass = hasRequiredCount
+            ? (complete ? styles.badgeOk : styles.badgeWarn)
+            : (count > 0 ? styles.badgeOk : styles.badgeNeutral)
           return (
             <View key={group.type} className={styles.voucherSection}>
               <View className={styles.voucherSectionHeader}>
@@ -462,15 +471,12 @@ const Step3Voucher: React.FC = () => {
                   <View>
                     <Text className={styles.voucherSectionName}>{group.name}</Text>
                     <Text className={styles.voucherSectionHint}>
-                      {group.systemCount > 0 ? `应传 ${group.systemCount} 张，已传 ${count} 张` : '如有退款请上传凭证'}
+                      {hasRequiredCount ? `应传 ${group.systemCount} 张，已传 ${count} 张` : `已传 ${count} 张${count === 0 ? '，如有退款请上传' : ''}`}
                     </Text>
                   </View>
                 </View>
-                <View className={classnames(
-                  styles.voucherStatusBadge,
-                  complete ? styles.badgeOk : styles.badgeWarn
-                )}>
-                  <Text>{complete ? '✓ 齐全' : `${count}/${group.systemCount || '0'}`}</Text>
+                <View className={classnames(styles.voucherStatusBadge, badgeClass)}>
+                  <Text>{badgeText}</Text>
                 </View>
               </View>
               {renderVoucherThumbs(group.type)}
@@ -583,9 +589,13 @@ const Step3Voucher: React.FC = () => {
         />
       ) : (
         <ResultFeedback
-          status={Math.abs(totalAmountDiff) <= 10 && Math.abs(totalCountDiff) <= 1 ? 'warning' : 'error'}
-          title='支付渠道存在差异'
-          message={`合计：${getPaymentCountText(totalCountDiff, totalAmountDiff)}`}
+          status={
+            paymentItems.some(p => Math.abs(p.amountDiff) > 10 || Math.abs(p.countDiff) > 1)
+              ? 'error'
+              : 'warning'
+          }
+          title='部分渠道存在差异'
+          message='以下渠道的金额或笔数未完全对上，请逐项核查：'
           details={paymentItems.map(p => ({
             label: p.name,
             value: getPaymentCountText(p.countDiff, p.amountDiff)
