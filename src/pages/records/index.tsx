@@ -1,39 +1,54 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { View, Text, Button } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import classnames from 'classnames'
 import { formatMoney, formatDateTime } from '@/utils/format'
 import { mockSettlementRecords } from '@/data/mockSettlementRecords'
 import { SettlementRecord } from '@/types/settlement'
+import { getSettlementRecords } from '@/store/SettlementContext'
 import styles from './index.module.scss'
 
 type FilterType = 'all' | 'normal' | 'warning' | 'error'
 
 const RecordsPage: React.FC = () => {
   const [filter, setFilter] = useState<FilterType>('all')
+  const [localRecords, setLocalRecords] = useState<SettlementRecord[]>([])
+
+  const loadRecords = useCallback(() => {
+    const stored = getSettlementRecords()
+    setLocalRecords(stored)
+  }, [])
+
+  useDidShow(() => {
+    loadRecords()
+  })
+
+  const allRecords = useMemo(() => {
+    return [...localRecords, ...mockSettlementRecords]
+  }, [localRecords])
 
   const filteredRecords = useMemo(() => {
-    if (filter === 'all') return mockSettlementRecords
-    return mockSettlementRecords.filter(r => {
+    if (filter === 'all') return allRecords
+    return allRecords.filter(r => {
       const totalDiff = r.summary.cashDiff + r.summary.paymentDiff
       if (filter === 'normal') return totalDiff === 0 && r.summary.issuesCount === 0
       if (filter === 'warning') return Math.abs(totalDiff) > 0 && Math.abs(totalDiff) <= 50
       if (filter === 'error') return Math.abs(totalDiff) > 50 || r.summary.issuesCount > 0
       return true
     })
-  }, [filter])
+  }, [filter, allRecords])
 
   const stats = useMemo(() => {
-    const total = mockSettlementRecords.length
-    const perfect = mockSettlementRecords.filter(r =>
+    const total = allRecords.length
+    const perfect = allRecords.filter(r =>
       r.summary.cashDiff === 0 && r.summary.paymentDiff === 0 && r.summary.issuesCount === 0
     ).length
-    const withIssue = mockSettlementRecords.filter(r => r.summary.issuesCount > 0).length
+    const withIssue = allRecords.filter(r => r.summary.issuesCount > 0).length
     return { total, perfect, withIssue }
-  }, [])
+  }, [allRecords])
 
   const filters: { key: FilterType; label: string }[] = [
-    { key: 'all', label: `全部 (${mockSettlementRecords.length})` },
+    { key: 'all', label: `全部 (${allRecords.length})` },
     { key: 'normal', label: '完美交班' },
     { key: 'warning', label: '有小差异' },
     { key: 'error', label: '有问题' }

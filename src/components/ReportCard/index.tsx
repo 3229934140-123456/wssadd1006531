@@ -181,16 +181,37 @@ const ReportCard: React.FC<ReportCardProps> = ({
           <View className={styles.sectionTitle}>
             <View className={styles.dot} />
             <Text>待办事项（移交早班）</Text>
+            <Text className={styles.issueCountBadge}>{state.issues.length} 项</Text>
           </View>
           {state.issues.map(issue => (
-            <View key={issue.id} className={styles.issueItem}>
+            <View key={issue.id} className={classnames(
+              styles.issueItem,
+              issue.fromPatient && styles.issueItemFromPatient
+            )}>
               <View className={styles.issueHeader}>
-                <Text className={styles.issueType}>{ISSUE_TYPE_LABELS[issue.type]}</Text>
+                <View className={styles.issueHeaderLeft}>
+                  <Text className={classnames(
+                    styles.issueType,
+                    issue.fromPatient && styles.issueTypePatient
+                  )}>
+                    {issue.fromPatient ? '👤 ' : ''}{ISSUE_TYPE_LABELS[issue.type]}
+                  </Text>
+                  {issue.patientName && (
+                    <Text className={styles.issuePatientName}>患者：{issue.patientName}</Text>
+                  )}
+                </View>
                 {issue.amount !== undefined && issue.amount > 0 && (
                   <Text className={styles.issueAmount}>{formatMoney(issue.amount)}</Text>
                 )}
               </View>
               <Text className={styles.issueDesc}>{issue.description}</Text>
+              {issue.relatedPatientId && (
+                <View className={styles.issueMeta}>
+                  <Text className={styles.issueMetaText}>
+                    🔗 关联患者ID：{issue.relatedPatientId}
+                  </Text>
+                </View>
+              )}
             </View>
           ))}
         </View>

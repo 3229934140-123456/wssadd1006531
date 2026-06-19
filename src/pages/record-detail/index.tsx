@@ -1,18 +1,29 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useCallback } from 'react'
 import { View, Text, Button } from '@tarojs/components'
-import Taro, { useRouter } from '@tarojs/taro'
+import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import { mockSettlementRecords } from '@/data/mockSettlementRecords'
 import ReportCard from '@/components/ReportCard'
 import { formatDateTime } from '@/utils/format'
+import { getSettlementRecords } from '@/store/SettlementContext'
 import styles from './index.module.scss'
 
 const RecordDetailPage: React.FC = () => {
   const router = useRouter()
   const recordId = router.params.id
+  const [localRecords, setLocalRecords] = useState(getSettlementRecords())
+
+  const loadRecords = useCallback(() => {
+    setLocalRecords(getSettlementRecords())
+  }, [])
+
+  useDidShow(() => {
+    loadRecords()
+  })
 
   const record = useMemo(() => {
-    return mockSettlementRecords.find(r => r.id === recordId) || mockSettlementRecords[0]
-  }, [recordId])
+    const allRecords = [...localRecords, ...mockSettlementRecords]
+    return allRecords.find(r => r.id === recordId) || allRecords[0]
+  }, [recordId, localRecords])
 
   const handleBack = () => {
     Taro.navigateBack()

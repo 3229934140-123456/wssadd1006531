@@ -9,6 +9,7 @@ export interface UnpaidPatient {
   time: string
   status: 'pending' | 'confirmed' | 'issue'
   issueReason?: string
+  issueType?: IssueType
   note?: string
 }
 
@@ -28,23 +29,40 @@ export interface ReceiptRecord {
   totalCount: number
 }
 
+export interface VoucherImage {
+  id: string
+  tempFilePath: string
+  thumbPath?: string
+  size: number
+  type: 'pos' | 'wechat' | 'alipay' | 'refund'
+  uploadedAt: string
+}
+
+export type VoucherType = 'pos' | 'wechat' | 'alipay' | 'refund'
+
 export interface VoucherUpload {
-  posReceipts: number
-  wechatScreenshots: number
-  alipayScreenshots: number
-  refundProofs: number
+  images: VoucherImage[]
 }
 
 export interface PaymentCompare {
   wechatSystem: number
+  wechatSystemCount: number
   wechatActual: number
+  wechatActualCount: number
   wechatDiff: number
+  wechatCountDiff: number
   alipaySystem: number
+  alipaySystemCount: number
   alipayActual: number
+  alipayActualCount: number
   alipayDiff: number
+  alipayCountDiff: number
   posSystem: number
+  posSystemCount: number
   posActual: number
+  posActualCount: number
   posDiff: number
+  posCountDiff: number
 }
 
 export type IssueType =
@@ -61,9 +79,11 @@ export interface IssueItem {
   type: IssueType
   description: string
   relatedPatientId?: string
+  patientName?: string
   amount?: number
   createdAt: string
   handedOver: boolean
+  fromPatient?: boolean
 }
 
 export const ISSUE_TYPE_LABELS: Record<IssueType, string> = {

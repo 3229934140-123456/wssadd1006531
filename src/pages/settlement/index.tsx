@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { View, Text, Button, Input } from '@tarojs/components'
+import { View, Text, Button, Input, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import classnames from 'classnames'
 import {
@@ -42,14 +42,19 @@ const Step1Patients: React.FC = () => {
 
   const handleConfirm = (p: UnpaidPatient) => {
     updatePatientStatus(p.id, 'confirmed')
+    Taro.showToast({ title: '已确认', icon: 'success', duration: 1000 })
   }
 
   const handleMarkIssue = (p: UnpaidPatient) => {
     Taro.showActionSheet({
       itemList: ['患者未付尾款', '手工优惠未审批', '医生临时加项未录入', '其他情况'],
       success: res => {
-        const reasons = ['患者未付尾款，已联系', '有手工优惠需早班确认', '医生加项费用待确认', '其他待说明']
-        updatePatientStatus(p.id, 'issue', reasons[res.tapIndex])
+        const issueTypes: ('patient_unpaid' | 'manual_discount' | 'doctor_extra' | 'other')[] = [
+          'patient_unpaid', 'manual_discount', 'doctor_extra', 'other'
+        ]
+        const reasons = ['患者未付尾款，已联系待早班确认', '有手工优惠需早班确认审批', '医生临时加项费用待系统补录', '其他待说明事项']
+        updatePatientStatus(p.id, 'issue', reasons[res.tapIndex], issueTypes[res.tapIndex])
+        Taro.showToast({ title: '已加入待办', icon: 'none', duration: 1500 })
       }
     })
   }
@@ -276,166 +281,262 @@ const Step2Cash: React.FC = () => {
   )
 }
 
-const Step3Voucher: React.FC = () => {
-  const { state, updatePaymentCompare, updateVoucherUpload, updateReceiptRecord } = useSettlement()
-  const { wechatDiff, alipayDiff, posDiff } = state.paymentCompare
-  const totalPaymentDiff = wechatDiff + alipayDiff + posDiff
+const getPaymentCountClass = (countDiff: number, amountDiff: number) => {
+  if (countDiff === 0 && amountDiff === 0) return styles.diffNormal
+  if (Math.abs(countDiff) <= 1 && Math.abs(amountDiff) <= 10) return styles.diffWarning
+  return styles.diffError
+}
 
-  const handleUpload = (key: keyof typeof state.voucherUpload, max: number) => {
-    const current = state.voucherUpload[key]
-    if (current < max) {
-      updateVoucherUpload({ [key]: current + 1 })
-      Taro.showToast({ title: '模拟上传成功', icon: 'success' })
-    } else {
-      Taro.showToast({ title: '数量已达上限', icon: 'none' })
+const getPaymentCountText = (countDiff: number, amountDiff: number): string => {
+  const parts: string[] = []
+  if (countDiff === 0 && amountDiff === 0) return '笔数金额都对上 ✓'
+  if (countDiff === 0) parts.push('笔数一致')
+  else if (countDiff < 0) parts.push(`少 ${Math.abs(countDiff)} 笔`)
+  else parts.push(`多 ${countDiff} 笔`)
+
+  if (amountDiff === 0) parts.push('金额一致')
+  else if (amountDiff < 0) parts.push(`金额少 ${formatMoney(Math.abs(amountDiff))}`)
+  else parts.push(`金额多 ${formatMoney(amountDiff)}`)
+
+  return parts.join('，')
+}
+
+const Step3Voucher: React.FC = () => {
+  const { state, updatePaymentCompare, updateReceiptRecord, addVoucherImage, removeVoucherImage, getVoucherCountByType } = useSettlement()
+  const pc = state.paymentCompare
+  const totalAmountDiff = pc.wechatDiff + pc.alipayDiff + pc.posDiff
+  const totalCountDiff = pc.wechatCountDiff + pc.alipayCountDiff + pc.posCountDiff
+
+  const handleChooseMedia = async (type: 'pos' | 'wechat' | 'alipay' | 'refund', maxCount: number) => {
+    const currentCount = getVoucherCountByType(type)
+    const remaining = maxCount - currentCount
+    if (remaining <= 0) {
+      Taro.showToast({ title: '该类凭证已上传够了', icon: 'none' })
+      return
+    }
+
+    try {
+      const res = await Taro.chooseMedia({
+        count: remaining,
+        mediaType: ['image'],
+        sourceType: ['album', 'camera'],
+        camera: 'back'
+      })
+
+      if (res.tempFiles && res.tempFiles.length > 0) {
+        res.tempFiles.forEach(file => {
+          addVoucherImage(type, file.tempFilePath, file.size || 0, file.thumbTempFilePath)
+        })
+        Taro.showToast({ title: `已上传 ${res.tempFiles.length} 张`, icon: 'success' })
+      }
+    } catch (e) {
+      console.log('用户取消或失败', e)
     }
   }
 
-  const voucherItems = [
-    {
-      key: 'posReceipts' as const,
-      icon: '🧾',
-      name: 'POS机小票',
-      hint: `应上传 3 张`,
-      count: state.voucherUpload.posReceipts,
-      systemCount: 3,
-      onClick: () => handleUpload('posReceipts', 3)
-    },
-    {
-      key: 'wechatScreenshots' as const,
-      icon: '💚',
-      name: '微信到账截图',
-      hint: `应上传 8 张`,
-      count: state.voucherUpload.wechatScreenshots,
-      systemCount: 8,
-      onClick: () => handleUpload('wechatScreenshots', 8)
-    },
-    {
-      key: 'alipayScreenshots' as const,
-      icon: '💙',
-      name: '支付宝到账截图',
-      hint: `应上传 4 张`,
-      count: state.voucherUpload.alipayScreenshots,
-      systemCount: 4,
-      onClick: () => handleUpload('alipayScreenshots', 4)
-    },
-    {
-      key: 'refundProofs' as const,
-      icon: '↩️',
-      name: '退款凭证',
-      hint: '如无退款可跳过',
-      count: state.voucherUpload.refundProofs,
-      systemCount: 1,
-      onClick: () => handleUpload('refundProofs', 5)
-    }
+  const handlePreviewImage = (url: string) => {
+    const allUrls = state.voucherUpload.images.map(img => img.tempFilePath)
+    Taro.previewImage({
+      current: url,
+      urls: allUrls
+    })
+  }
+
+  const handleDeleteImage = (e: any, imageId: string) => {
+    e.stopPropagation()
+    Taro.showModal({
+      title: '删除凭证',
+      content: '确定要删除这张凭证吗？删除后可重新拍摄。',
+      confirmColor: '#DC2626',
+      success: res => {
+        if (res.confirm) {
+          removeVoucherImage(imageId)
+          Taro.showToast({ title: '已删除', icon: 'none' })
+        }
+      }
+    })
+  }
+
+  const voucherGroups = [
+    { type: 'pos' as const, icon: '🧾', name: 'POS机小票', systemCount: 3, maxCount: 5, color: '#6366F1' },
+    { type: 'wechat' as const, icon: '💚', name: '微信到账截图', systemCount: 8, maxCount: 12, color: '#10B981' },
+    { type: 'alipay' as const, icon: '💙', name: '支付宝到账截图', systemCount: 4, maxCount: 8, color: '#3B82F6' },
+    { type: 'refund' as const, icon: '↩️', name: '退款凭证', systemCount: 0, maxCount: 5, color: '#F59E0B' }
   ]
 
   const paymentItems = [
     {
-      key: 'wechatActual',
+      amountKey: 'wechatActual' as const,
+      countKey: 'wechatActualCount' as const,
+      system: pc.wechatSystem,
+      systemCount: pc.wechatSystemCount,
+      actual: pc.wechatActual,
+      actualCount: pc.wechatActualCount,
+      amountDiff: pc.wechatDiff,
+      countDiff: pc.wechatCountDiff,
       icon: '💚',
       name: '微信支付',
       iconClass: styles.iconWechat,
-      system: state.paymentCompare.wechatSystem,
-      actual: state.paymentCompare.wechatActual,
-      diff: wechatDiff,
-      systemCount: 8
+      voucherType: 'wechat' as const
     },
     {
-      key: 'alipayActual',
+      amountKey: 'alipayActual' as const,
+      countKey: 'alipayActualCount' as const,
+      system: pc.alipaySystem,
+      systemCount: pc.alipaySystemCount,
+      actual: pc.alipayActual,
+      actualCount: pc.alipayActualCount,
+      amountDiff: pc.alipayDiff,
+      countDiff: pc.alipayCountDiff,
       icon: '💙',
       name: '支付宝',
       iconClass: styles.iconAlipay,
-      system: state.paymentCompare.alipaySystem,
-      actual: state.paymentCompare.alipayActual,
-      diff: alipayDiff,
-      systemCount: 4
+      voucherType: 'alipay' as const
     },
     {
-      key: 'posActual',
+      amountKey: 'posActual' as const,
+      countKey: 'posActualCount' as const,
+      system: pc.posSystem,
+      systemCount: pc.posSystemCount,
+      actual: pc.posActual,
+      actualCount: pc.posActualCount,
+      amountDiff: pc.posDiff,
+      countDiff: pc.posCountDiff,
       icon: '💳',
       name: 'POS刷卡',
       iconClass: styles.iconPos,
-      system: state.paymentCompare.posSystem,
-      actual: state.paymentCompare.posActual,
-      diff: posDiff,
-      systemCount: 3
+      voucherType: 'pos' as const
     }
   ]
+
+  const renderVoucherThumbs = (type: 'pos' | 'wechat' | 'alipay' | 'refund') => {
+    const images = state.voucherUpload.images.filter(img => img.type === type)
+    const group = voucherGroups.find(g => g.type === type)!
+    const remaining = group.maxCount - images.length
+
+    return (
+      <View className={styles.thumbsRow}>
+        {images.map(img => (
+          <View key={img.id} className={styles.thumbWrap} onClick={() => handlePreviewImage(img.tempFilePath)}>
+            <Image src={img.thumbPath || img.tempFilePath} className={styles.thumbImg} mode='aspectFill' />
+            <View className={styles.thumbDelete} onClick={(e) => handleDeleteImage(e, img.id)}>
+              <Text className={styles.thumbDeleteText}>×</Text>
+            </View>
+          </View>
+        ))}
+        {remaining > 0 && (
+          <View className={styles.thumbAdd} onClick={() => handleChooseMedia(type, group.maxCount)}>
+            <Text className={styles.thumbAddText}>+</Text>
+            <Text className={styles.thumbAddHint}>拍/选</Text>
+          </View>
+        )}
+      </View>
+    )
+  }
+
+  const allPassed = totalAmountDiff === 0 && totalCountDiff === 0
 
   return (
     <View>
       <View className={styles.tipBox}>
         <Text className={styles.tipIcon}>📸</Text>
         <Text className={styles.tipText}>
-          先上传支付凭证（小票/截图），再填写各渠道实际到账金额。系统会自动计算与账面差异。
+          先点「+」拍照或从相册选择凭证，可预览、可删除重拍。再填写各渠道实到金额和笔数，两项都对上才算通过。
         </Text>
       </View>
 
       <View className={styles.card}>
         <View className={styles.cardTitle}>
           <View className={styles.cardTitleIcon}>🖼</View>
-          <Text>凭证上传（{state.voucherUpload.posReceipts + state.voucherUpload.wechatScreenshots + state.voucherUpload.alipayScreenshots + state.voucherUpload.refundProofs}）</Text>
+          <Text>凭证上传（{state.voucherUpload.images.length} 张）</Text>
         </View>
-        <View className={styles.voucherGrid}>
-          {voucherItems.map(v => {
-            const uploaded = v.count > 0
-            const complete = v.count >= v.systemCount
-            return (
-              <View
-                key={v.key}
-                className={classnames(styles.voucherItem, uploaded && styles.voucherUploaded)}
-                onClick={v.onClick}
-              >
-                <Text className={styles.voucherIcon}>{v.icon}</Text>
-                <Text className={styles.voucherName}>{v.name}</Text>
-                <Text className={styles.voucherCount}>
-                  {v.count}/{v.systemCount} {complete ? '✓' : '点击上传'}
-                </Text>
+
+        {voucherGroups.map(group => {
+          const count = getVoucherCountByType(group.type)
+          const complete = group.systemCount === 0 ? true : count >= group.systemCount
+          return (
+            <View key={group.type} className={styles.voucherSection}>
+              <View className={styles.voucherSectionHeader}>
+                <View className={styles.voucherSectionLeft}>
+                  <Text className={styles.voucherSectionIcon}>{group.icon}</Text>
+                  <View>
+                    <Text className={styles.voucherSectionName}>{group.name}</Text>
+                    <Text className={styles.voucherSectionHint}>
+                      {group.systemCount > 0 ? `应传 ${group.systemCount} 张，已传 ${count} 张` : '如有退款请上传凭证'}
+                    </Text>
+                  </View>
+                </View>
+                <View className={classnames(
+                  styles.voucherStatusBadge,
+                  complete ? styles.badgeOk : styles.badgeWarn
+                )}>
+                  <Text>{complete ? '✓ 齐全' : `${count}/${group.systemCount || '0'}`}</Text>
+                </View>
               </View>
-            )
-          })}
-        </View>
+              {renderVoucherThumbs(group.type)}
+            </View>
+          )
+        })}
       </View>
 
       <View className={styles.card}>
         <View className={styles.cardTitle}>
           <View className={styles.cardTitleIcon}>💻</View>
-          <Text>电子支付对账</Text>
+          <Text>电子支付对账（笔数 + 金额 双重校验）</Text>
         </View>
         <View className={styles.paymentSection}>
-          {paymentItems.map(p => (
-            <View key={p.key} className={styles.paymentRow}>
-              <View className={classnames(styles.paymentIcon, p.iconClass)}>
-                <Text>{p.icon}</Text>
-              </View>
-              <View className={styles.paymentInfo}>
-                <Text className={styles.paymentName}>{p.name}</Text>
-                <Text className={styles.paymentSystem}>
-                  系统记录：{formatMoney(p.system)}（{p.systemCount}笔）
-                </Text>
-                <View className={styles.paymentInputWrap} style={{ marginTop: '12rpx' }}>
-                  <Text style={{ fontSize: '24rpx', color: '#6B7280' }}>实到金额</Text>
-                  <Input
-                    className={styles.paymentInput}
-                    type='digit'
-                    placeholder='¥ 0.00'
-                    value={p.actual === 0 ? '' : String(p.actual)}
-                    onInput={e => {
-                      const val = parseFloat(e.detail.value) || 0
-                      updatePaymentCompare({ [p.key]: val } as any)
-                    }}
-                  />
+          {paymentItems.map(p => {
+            const voucherCount = getVoucherCountByType(p.voucherType)
+            return (
+              <View key={p.amountKey} className={styles.paymentRow}>
+                <View className={classnames(styles.paymentIcon, p.iconClass)}>
+                  <Text>{p.icon}</Text>
                 </View>
-                <View className={styles.paymentDiff}>
-                  <Text style={{ color: '#9CA3AF' }}>核对结果</Text>
-                  <Text className={getDiffClass(p.diff)}>
-                    {getDiffText(p.diff)}
+                <View className={styles.paymentInfo}>
+                  <Text className={styles.paymentName}>{p.name}</Text>
+                  <Text className={styles.paymentSystem}>
+                    系统记录：{formatMoney(p.system)} · {p.systemCount}笔 · 凭证{voucherCount}张
                   </Text>
+
+                  <View className={styles.paymentDoubleRow}>
+                    <View className={styles.paymentInputHalf}>
+                      <Text style={{ fontSize: '22rpx', color: '#6B7280' }}>实到金额</Text>
+                      <Input
+                        className={styles.paymentInput}
+                        type='digit'
+                        placeholder='¥ 0.00'
+                        value={p.actual === 0 ? '' : String(p.actual)}
+                        onInput={e => {
+                          const val = parseFloat(e.detail.value) || 0
+                          updatePaymentCompare({ [p.amountKey]: val } as any)
+                        }}
+                      />
+                    </View>
+                    <View className={styles.paymentInputHalf}>
+                      <Text style={{ fontSize: '22rpx', color: '#6B7280' }}>实到笔数</Text>
+                      <Input
+                        className={styles.paymentInput}
+                        type='number'
+                        placeholder='0'
+                        value={p.actualCount === 0 ? '' : String(p.actualCount)}
+                        onInput={e => {
+                          const val = parseInt(e.detail.value) || 0
+                          updatePaymentCompare({ [p.countKey]: val } as any)
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View className={styles.paymentDiff}>
+                    <Text style={{ color: '#9CA3AF' }}>核对结果</Text>
+                    <Text className={getPaymentCountClass(p.countDiff, p.amountDiff)}>
+                      {getPaymentCountText(p.countDiff, p.amountDiff)}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
+            )
+          })}
         </View>
       </View>
 
@@ -474,22 +575,21 @@ const Step3Voucher: React.FC = () => {
         </View>
       </View>
 
-      {totalPaymentDiff === 0 ? (
+      {allPassed ? (
         <ResultFeedback
           status='normal'
-          title='支付渠道全部吻合'
-          message='微信、支付宝、POS 三个渠道到账金额均与系统记录一致。'
+          title='支付渠道全部吻合 ✓'
+          message='微信、支付宝、POS 三个渠道的笔数和金额均与系统记录一致。'
         />
       ) : (
         <ResultFeedback
-          status={Math.abs(totalPaymentDiff) <= 10 ? 'warning' : 'error'}
+          status={Math.abs(totalAmountDiff) <= 10 && Math.abs(totalCountDiff) <= 1 ? 'warning' : 'error'}
           title='支付渠道存在差异'
-          message={`电子支付合计 ${getDiffText(totalPaymentDiff, '')}`}
-          details={[
-            { label: '微信', value: getDiffText(wechatDiff, '') },
-            { label: '支付宝', value: getDiffText(alipayDiff, '') },
-            { label: 'POS刷卡', value: getDiffText(posDiff, '') }
-          ]}
+          message={`合计：${getPaymentCountText(totalCountDiff, totalAmountDiff)}`}
+          details={paymentItems.map(p => ({
+            label: p.name,
+            value: getPaymentCountText(p.countDiff, p.amountDiff)
+          }))}
         />
       )}
     </View>
