@@ -12,11 +12,12 @@ import {
   VoucherImage,
   VoucherType,
   IssueType,
-  SettlementRecord
+  SettlementRecord,
+  IssueStatus
 } from '@/types/settlement'
 import { mockUnpaidPatients } from '@/data/mockPatients'
 import { systemCashRecord, systemPaymentRecord, systemReceiptRecord } from '@/data/mockSystemRecords'
-import { calcCashTotal, genId } from '@/utils/format'
+import { calcCashTotal, genId, formatMoney } from '@/utils/format'
 
 const STORAGE_KEY = 's_settlement_records'
 
@@ -84,7 +85,6 @@ interface SettlementContextType {
   finalizeSettlement: (signature: string) => SettlementRecord | null
   getVoucherCountByType: (type: VoucherType) => number
 }
-
 const SettlementContext = createContext<SettlementContextType | undefined>(undefined)
 
 export const SettlementProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -384,4 +384,114 @@ export const getSettlementRecords = (): SettlementRecord[] => {
   } catch {
     return []
   }
+}
+
+export const updateRecordIssueStatus = (
+  recordId: string,
+  issueId: string,
+  status: IssueStatus,
+  handlerName: string = '早班'
+): boolean => {
+  try {
+    const records = getSettlementRecords()
+    const recordIndex = records.findIndex(r => r.id === recordId)
+    if (recordIndex === -1) return false
+
+    const issueIndex = records[recordIndex].details.issues.findIndex(i => i.id === issueId)
+    if (issueIndex === -1) return false
+
+    records[recordIndex].details.issues[issueIndex] = {
+      ...records[recordIndex].details.issues[issueIndex],
+      status,
+      handlerName,
+      handledAt: new Date().toISOString()
+    }
+
+    Taro.setStorageSync(STORAGE_KEY, JSON.stringify(records))
+    return true
+  } catch {
+    return false
+  }
+}
+
+export const updateRecordIssueResult = (
+  recordId: string,
+  issueId: string,
+  handleResult: string,
+  handlerName: string = '早班'
+): boolean => {
+  try {
+    const records = getSettlementRecords()
+    const recordIndex = records.findIndex(r => r.id === recordId)
+    if (recordIndex === -1) return false
+
+    const issueIndex = records[recordIndex].details.issues.findIndex(i => i.id === issueId)
+    if (issueIndex === -1) return false
+
+    records[recordIndex].details.issues[issueIndex] = {
+      ...records[recordIndex].details.issues[issueIndex],
+      handleResult,
+      handlerName,
+      handledAt: new Date().toISOString(),
+      status: 'resolved'
+    }
+
+    Taro.setStorageSync(STORAGE_KEY, JSON.stringify(records))
+    return true
+  } catch {
+    return false
+  }
+}
+
+export const getUnresolvedIssueCount = (record: SettlementRecord): number => {
+  return record.details.issues.filter(i => !i.status || i.status === 'pending').length
+}
+
+export const generateTextSummary = (record: SettlementRecord): string => {
+  const { summary, details } = record
+  const pc = details.paymentCompare
+  const cashDiff = summary.cashDiff
+  const payDiff = summary.paymentDiff
+  const voucherCount = details.voucherUpload.images.length
+  const refundCount = details.voucherUpload.images.filter(img => img.type === 'refund').length
+
+  const lines: string[] = []
+  lines.push(`【${record.date} ${record.shift}日清交班】`)
+  lines.push(`交班人：${record.operatorName}`)
+  lines.push(`就诊患者：${summary.totalPatients} 人`)
+  lines.push('')
+  lines.push('💰 现金对账')
+  lines.push(`  实收：${formatMoney(summary.cashTotal)}`)
+  lines.push(`  差异：${cashDiff >= 0 ? '+' : ''}${formatMoney(cashDiff)} ${cashDiff === 0 ? '✓' : '⚠️'}`)
+  lines.push('')
+  lines.push('💳 电子支付对账')
+  lines.push(`  微信：系统${formatMoney(pc.wechatSystem)}(${pc.wechatSystemCount}笔) / 实到${formatMoney(pc.wechatActual)}(${pc.wechatActualCount}笔) → ${pc.wechatDiff === 0 && pc.wechatCountDiff === 0 ? '✓' : '差异 ' + formatMoney(pc.wechatDiff, true) + ' ' + (pc.wechatCountDiff >= 0 ? '+' : '') + pc.wechatCountDiff + '笔'}`)
+  lines.push(`  支付宝：系统${formatMoney(pc.alipaySystem)}(${pc.alipaySystemCount}笔) / 实到${formatMoney(pc.alipayActual)}(${pc.alipayActualCount}笔) → ${pc.alipayDiff === 0 && pc.alipayCountDiff === 0 ? '✓' : '差异 ' + formatMoney(pc.alipayDiff, true) + ' ' + (pc.alipayCountDiff >= 0 ? '+' : '') + pc.alipayCountDiff + '笔'}`)
+  lines.push(`  POS：系统${formatMoney(pc.posSystem)}(${pc.posSystemCount}笔) / 实到${formatMoney(pc.posActual)}(${pc.posActualCount}笔) → ${pc.posDiff === 0 && pc.posCountDiff === 0 ? '✓' : '差异 ' + formatMoney(pc.posDiff, true) + ' ' + (pc.posCountDiff >= 0 ? '+' : '') + pc.posCountDiff + '笔'}`)
+  lines.push(`  电子支付合计差异：${payDiff >= 0 ? '+' : ''}${formatMoney(payDiff)}`)
+  lines.push('')
+  lines.push('🖼 凭证上传')
+  lines.push(`  共 ${voucherCount} 张，其中退款凭证 ${refundCount} 张`)
+  lines.push('')
+
+  if (details.issues.length > 0) {
+    lines.push('📋 移交早班事项')
+    details.issues.forEach((issue, idx) => {
+      const statusText = issue.status === 'resolved' ? '✓已解决' : issue.status === 'following' ? '跟进中' : issue.status === 'contacted' ? '已联系' : '待处理'
+      lines.push(`  ${idx + 1}. [${statusText}] ${issue.patientName ? issue.patientName + ' - ' : ''}${issue.description}`)
+      if (issue.amount !== undefined) {
+        lines.push(`     涉及金额：${formatMoney(issue.amount)}`)
+      }
+      if (issue.handleResult) {
+        lines.push(`     处理结果：${issue.handleResult}`)
+      }
+    })
+  } else {
+    lines.push('✅ 无待办事项，全部核对通过')
+  }
+
+  lines.push('')
+  lines.push(`生成时间：${record.completedAt}`)
+
+  return lines.join('\n')
 }

@@ -128,3 +128,327 @@
   text-align: center;
   line-height: $line-height-loose;
 }
+
+.sectionCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+  border: 2rpx solid $color-border;
+}
+
+.sectionCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  cursor: pointer;
+}
+
+.sectionCardTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.mockHint {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  background: $color-bg-page;
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-round;
+}
+
+.expandIcon {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.issueDetailCard {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  border: 2rpx solid $color-border;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.issueDetailHeader {
+  margin-bottom: $spacing-sm;
+}
+
+.issueDetailTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.issueTypeText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.issueStatusBadge {
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-round;
+  color: white;
+  font-size: 20rpx;
+  font-weight: $font-weight-semibold;
+}
+
+.issuePatient {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.issueDescText {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-sm;
+}
+
+.issueMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-bottom: $spacing-sm;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1rpx dashed $color-divider;
+}
+
+.issueMetaText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.issueAmountText {
+  font-size: $font-size-xs;
+  color: $color-text-error;
+  font-weight: $font-weight-semibold;
+}
+
+.statusOptions {
+  display: flex;
+  gap: $spacing-xs;
+  flex-wrap: wrap;
+  margin-bottom: $spacing-sm;
+}
+
+.statusOptionBtn {
+  @include button-reset;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  background: $color-bg-card;
+  color: $color-text-tertiary;
+  font-size: $font-size-xs;
+  border: 2rpx solid $color-border;
+  transition: all $transition-fast;
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.statusOptionActive {
+  font-weight: $font-weight-semibold;
+  background: $color-bg-page;
+}
+
+.handleResultBox {
+  background: #ECFDF5;
+  border-radius: $radius-sm;
+  padding: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.handleResultLabel {
+  font-size: $font-size-xs;
+  color: $color-text-success;
+  font-weight: $font-weight-semibold;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.handleResultText {
+  font-size: $font-size-xs;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+}
+
+.handleResultMeta {
+  font-size: 20rpx;
+  color: $color-text-tertiary;
+  margin-top: 8rpx;
+  display: block;
+}
+
+.editResultBox {
+  margin-top: $spacing-sm;
+  background: $color-bg-card;
+  border-radius: $radius-sm;
+  padding: $spacing-sm;
+  border: 2rpx solid $color-primary-light;
+}
+
+.resultInput {
+  width: 100%;
+  height: 120rpx;
+  padding: $spacing-sm;
+  background: $color-bg-page;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  border: 2rpx solid $color-border;
+  line-height: $line-height-normal;
+}
+
+.editResultActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.cancelBtn {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  border: 2rpx solid $color-border;
+}
+
+.saveBtn {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  background: $color-primary;
+  color: white;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.editResultBtn {
+  @include button-reset;
+  width: 100%;
+  padding: $spacing-xs;
+  background: transparent;
+  color: $color-primary;
+  font-size: $font-size-xs;
+  border: 2rpx dashed $color-primary-light;
+  border-radius: $radius-sm;
+  margin-top: $spacing-xs;
+}
+
+.paymentSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paymentSummaryText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.expandHint {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.paymentDetailList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.paymentDetailItem {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  border: 2rpx solid $color-border;
+}
+
+.paymentDetailPassed {
+  border-color: $color-success-light;
+  background: #F0FDF4;
+}
+
+.paymentDetailHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1rpx dashed $color-divider;
+}
+
+.paymentDetailIcon {
+  font-size: 36rpx;
+}
+
+.paymentDetailName {
+  flex: 1;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.paymentDetailStatus {
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-round;
+  font-size: 20rpx;
+  font-weight: $font-weight-semibold;
+}
+
+.statusOk {
+  background: $color-success-light;
+  color: $color-text-success;
+}
+
+.statusWarn {
+  background: $color-warning-light;
+  color: $color-text-warning;
+}
+
+.paymentDetailGrid {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.paymentDetailCol {
+  flex: 1;
+  text-align: center;
+}
+
+.paymentDetailLabel {
+  font-size: 20rpx;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.paymentDetailValue {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.valuePos {
+  color: $color-text-success;
+}
+
+.valueNeg {
+  color: $color-text-error;
+}

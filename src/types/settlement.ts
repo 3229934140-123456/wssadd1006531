@@ -74,6 +74,8 @@ export type IssueType =
   | 'receipt_missing'
   | 'other'
 
+export type IssueStatus = 'pending' | 'following' | 'contacted' | 'resolved'
+
 export interface IssueItem {
   id: string
   type: IssueType
@@ -85,6 +87,10 @@ export interface IssueItem {
   createdAt: string
   handedOver: boolean
   fromPatient?: boolean
+  status?: IssueStatus
+  handleResult?: string
+  handlerName?: string
+  handledAt?: string
 }
 
 export const ISSUE_TYPE_LABELS: Record<IssueType, string> = {
@@ -95,6 +101,20 @@ export const ISSUE_TYPE_LABELS: Record<IssueType, string> = {
   cash_mismatch: '现金清点不符',
   receipt_missing: '收据编号缺失',
   other: '其他待办事项'
+}
+
+export const ISSUE_STATUS_LABELS: Record<IssueStatus, string> = {
+  pending: '待处理',
+  following: '已跟进',
+  contacted: '已联系患者',
+  resolved: '已解决'
+}
+
+export const ISSUE_STATUS_COLORS: Record<IssueStatus, string> = {
+  pending: '#DC2626',
+  following: '#F59E0B',
+  contacted: '#3B82F6',
+  resolved: '#10B981'
 }
 
 export type SettlementStep = 1 | 2 | 3 | 4

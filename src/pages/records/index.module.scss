@@ -13,6 +13,64 @@
   flex-wrap: wrap;
 }
 
+.filterSection {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  border: 2rpx solid $color-border;
+}
+
+.filterRow {
+  display: flex;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-sm;
+  flex-wrap: wrap;
+  align-items: center;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.filterChip {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  border: 2rpx solid $color-border;
+  transition: all $transition-fast;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.filterChipActive {
+  background: $color-primary-light;
+  color: $color-primary-dark;
+  border-color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.filterChipOperator {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  margin-left: auto;
+}
+
+.resultCount {
+  padding: 0 $spacing-sm;
+  margin-bottom: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
 .filterBtn {
   @include button-reset;
   padding: $spacing-sm $spacing-lg;
@@ -88,7 +146,28 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: $spacing-md;
+  margin-bottom: $spacing-xs;
+}
+
+.recordHeaderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.recordHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.unresolvedBadge {
+  background: $color-error;
+  color: white;
+  padding: 4rpx $spacing-sm;
+  border-radius: $radius-round;
+  font-size: 20rpx;
+  font-weight: $font-weight-semibold;
 }
 
 .recordDate {
@@ -143,10 +222,20 @@
 .valuePositive { color: $color-text-success; }
 .valueNegative { color: $color-text-error; }
 
+.recordTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-sm;
+}
+
 .recordFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.footerLeft {
+  flex: 1;
 }
 
 .issueBadge {
@@ -166,6 +255,11 @@
 .issueBadgeHas {
   background: $color-warning-light;
   color: $color-text-warning;
+}
+
+.issueBadgeDone {
+  background: $color-success-light;
+  color: $color-text-success;
 }
 
 .detailBtn {
