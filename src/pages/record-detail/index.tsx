@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { View, Text, Button, Input } from '@tarojs/components'
 import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import classnames from 'classnames'
-import { mockSettlementRecords } from '@/data/mockSettlementRecords'
 import ReportCard from '@/components/ReportCard'
 import { formatDateTime, formatMoney } from '@/utils/format'
 import {
@@ -10,6 +9,7 @@ import {
   updateRecordIssueStatus,
   updateRecordIssueResult,
   generateTextSummary,
+  generateUnresolvedSummary,
   getUnresolvedIssueCount
 } from '@/store/SettlementContext'
 import { ISSUE_TYPE_LABELS, ISSUE_STATUS_LABELS, ISSUE_STATUS_COLORS, IssueStatus } from '@/types/settlement'
@@ -39,24 +39,29 @@ const RecordDetailPage: React.FC = () => {
   })
 
   const record = useMemo(() => {
-    const allRecords = [...localRecords, ...mockSettlementRecords]
-    return allRecords.find(r => r.id === recordId) || allRecords[0]
+    return localRecords.find(r => r.id === recordId) || localRecords[0]
   }, [recordId, localRecords])
-
-  const isLocalRecord = useMemo(() => {
-    return localRecords.some(r => r.id === recordId)
-  }, [localRecords, recordId])
 
   const handleBack = () => {
     Taro.navigateBack()
   }
 
   const handleShare = () => {
-    const summary = generateTextSummary(record)
-    Taro.setClipboardData({
-      data: summary,
-      success: () => {
-        Taro.showToast({ title: '已复制到剪贴板', icon: 'success' })
+    Taro.showActionSheet({
+      itemList: ['复制完整交班摘要', '只复制未处理事项'],
+      success: (res) => {
+        let summary = ''
+        if (res.tapIndex === 0) {
+          summary = generateTextSummary(record)
+        } else {
+          summary = generateUnresolvedSummary(record)
+        }
+        Taro.setClipboardData({
+          data: summary,
+          success: () => {
+            Taro.showToast({ title: '已复制到剪贴板', icon: 'success' })
+          }
+        })
       }
     })
   }
@@ -66,10 +71,6 @@ const RecordDetailPage: React.FC = () => {
   }
 
   const handleStatusChange = (issueId: string, status: IssueStatus) => {
-    if (!isLocalRecord) {
-      Taro.showToast({ title: '示例记录无法修改', icon: 'none' })
-      return
-    }
     const success = updateRecordIssueStatus(recordId, issueId, status, '早班')
     if (success) {
       loadRecords()
@@ -78,10 +79,6 @@ const RecordDetailPage: React.FC = () => {
   }
 
   const handleSaveResult = (issueId: string) => {
-    if (!isLocalRecord) {
-      Taro.showToast({ title: '示例记录无法修改', icon: 'none' })
-      return
-    }
     if (!handleResultText.trim()) {
       Taro.showToast({ title: '请输入处理结果', icon: 'none' })
       return
@@ -96,10 +93,6 @@ const RecordDetailPage: React.FC = () => {
   }
 
   const startEditResult = (issueId: string, currentResult?: string) => {
-    if (!isLocalRecord) {
-      Taro.showToast({ title: '示例记录无法修改', icon: 'none' })
-      return
-    }
     setEditingIssueId(issueId)
     setHandleResultText(currentResult || '')
   }
@@ -144,9 +137,6 @@ const RecordDetailPage: React.FC = () => {
             <Text className={styles.sectionCardTitle}>
               📋 移交事项（{unresolved}/{record.details.issues.length} 待处理）
             </Text>
-            {!isLocalRecord && (
-              <Text className={styles.mockHint}>示例记录</Text>
-            )}
           </View>
           {record.details.issues.map(issue => {
             const currentStatus: IssueStatus = issue.status || 'pending'

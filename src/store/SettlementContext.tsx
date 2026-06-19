@@ -16,10 +16,12 @@ import {
   IssueStatus
 } from '@/types/settlement'
 import { mockUnpaidPatients } from '@/data/mockPatients'
+import { mockSettlementRecords } from '@/data/mockSettlementRecords'
 import { systemCashRecord, systemPaymentRecord, systemReceiptRecord } from '@/data/mockSystemRecords'
 import { calcCashTotal, genId, formatMoney } from '@/utils/format'
 
 const STORAGE_KEY = 's_settlement_records'
+const INIT_FLAG_KEY = 's_mock_initialized'
 
 const initialState: SettlementState = {
   currentStep: 1,
@@ -377,8 +379,35 @@ export const useSettlement = (): SettlementContextType => {
   return ctx
 }
 
+const initializeMockRecords = (): void => {
+  try {
+    const initialized = Taro.getStorageSync(INIT_FLAG_KEY)
+    if (initialized) return
+
+    const enriched = mockSettlementRecords.map(r => ({
+      ...r,
+      details: {
+        ...r.details,
+        issues: r.details.issues.map(issue => ({
+          status: 'pending' as const,
+          handleResult: '',
+          handlerName: '',
+          handledAt: '',
+          ...issue
+        }))
+      }
+    }))
+
+    Taro.setStorageSync(STORAGE_KEY, JSON.stringify(enriched))
+    Taro.setStorageSync(INIT_FLAG_KEY, '1')
+  } catch {
+    // ignore
+  }
+}
+
 export const getSettlementRecords = (): SettlementRecord[] => {
   try {
+    initializeMockRecords()
     const data = Taro.getStorageSync(STORAGE_KEY)
     return data ? JSON.parse(data) : []
   } catch {
@@ -494,4 +523,100 @@ export const generateTextSummary = (record: SettlementRecord): string => {
   lines.push(`生成时间：${record.completedAt}`)
 
   return lines.join('\n')
+}
+
+export const generateUnresolvedSummary = (record: SettlementRecord): string => {
+  const { summary, details } = record
+  const unresolvedIssues = details.issues.filter(i => i.status !== 'resolved')
+  const cashDiff = summary.cashDiff
+  const payDiff = summary.paymentDiff
+
+  const lines: string[] = []
+  lines.push(`【${record.date} ${record.shift}早班待跟进】`)
+  lines.push(`交班人：${record.operatorName}`)
+  lines.push('')
+
+  if (cashDiff !== 0) {
+    lines.push(`💰 现金差异：${cashDiff >= 0 ? '+' : ''}${formatMoney(cashDiff)}`)
+  }
+  if (payDiff !== 0) {
+    lines.push(`💳 电子支付差异：${payDiff >= 0 ? '+' : ''}${formatMoney(payDiff)}`)
+  }
+  if (cashDiff !== 0 || payDiff !== 0) {
+    lines.push('')
+  }
+
+  if (unresolvedIssues.length > 0) {
+    lines.push(`📋 待处理事项（${unresolvedIssues.length} 项）`)
+    unresolvedIssues.forEach((issue, idx) => {
+      const statusText = issue.status === 'following' ? '跟进中' : issue.status === 'contacted' ? '已联系' : '待处理'
+      lines.push(`  ${idx + 1}. [${statusText}] ${issue.patientName ? issue.patientName + ' - ' : ''}${issue.description}`)
+      if (issue.amount !== undefined) {
+        lines.push(`     涉及金额：${formatMoney(issue.amount)}`)
+      }
+      if (issue.patientNote) {
+        lines.push(`     备注：${issue.patientNote}`)
+      }
+    })
+  } else {
+    lines.push('✅ 全部事项已处理完成')
+  }
+
+  lines.push('')
+  lines.push(`更新时间：${new Date().toLocaleString('zh-CN')}`)
+
+  return lines.join('\n')
+}
+
+export interface UnresolvedIssueWithRecord {
+  issueId: string
+  recordId: string
+  recordDate: string
+  operatorName: string
+  shift: string
+  description: string
+  type: string
+  patientName?: string
+  patientNote?: string
+  amount?: number
+  status: string
+  handleResult?: string
+  handlerName?: string
+  handledAt?: string
+}
+
+export const getAllUnresolvedIssues = (): UnresolvedIssueWithRecord[] => {
+  const records = getSettlementRecords()
+  const result: UnresolvedIssueWithRecord[] = []
+
+  records.forEach(record => {
+    record.details.issues.forEach(issue => {
+      if (issue.status !== 'resolved') {
+        result.push({
+          issueId: issue.id,
+          recordId: record.id,
+          recordDate: record.date,
+          operatorName: record.operatorName,
+          shift: record.shift,
+          description: issue.description,
+          type: issue.type,
+          patientName: issue.patientName,
+          patientNote: issue.patientNote,
+          amount: issue.amount,
+          status: issue.status || 'pending',
+          handleResult: issue.handleResult,
+          handlerName: issue.handlerName,
+          handledAt: issue.handledAt
+        })
+      }
+    })
+  })
+
+  result.sort((a, b) => {
+    if (a.status === 'pending' && b.status !== 'pending') return -1
+    if (a.status !== 'pending' && b.status === 'pending') return 1
+    return b.recordDate.localeCompare(a.recordDate)
+  })
+
+  return result
 }

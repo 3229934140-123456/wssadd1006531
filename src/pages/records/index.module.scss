@@ -101,10 +101,31 @@
   box-shadow: 0 6rpx 20rpx rgba(16, 185, 129, 0.2);
 }
 
+.summaryHeaderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
 .summaryTitle {
   font-size: $font-size-sm;
   opacity: 0.9;
-  margin-bottom: $spacing-md;
+  margin: 0;
+}
+
+.workbenchBtn {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.2);
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  border-radius: $radius-round;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+
+  &::after {
+    border: none;
+  }
 }
 
 .summaryStats {

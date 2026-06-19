@@ -78,7 +78,7 @@ const MinePage: React.FC = () => {
             <Text className={styles.metaLabel}>完美对账</Text>
           </View>
           <View className={styles.metaItem}>
-            <Text className={styles.metaValue}>{Math.round(perfectCount / Math.max(myRecords.length, 1) * 100}%</Text>
+            <Text className={styles.metaValue}>{Math.round(perfectCount / Math.max(myRecords.length, 1) * 100)}%</Text>
             <Text className={styles.metaLabel}>准确率</Text>
           </View>
         </View>

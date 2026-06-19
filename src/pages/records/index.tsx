@@ -3,7 +3,6 @@ import { View, Text, Button } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import classnames from 'classnames'
 import { formatMoney, formatDateTime } from '@/utils/format'
-import { mockSettlementRecords } from '@/data/mockSettlementRecords'
 import { SettlementRecord } from '@/types/settlement'
 import { getSettlementRecords, getUnresolvedIssueCount } from '@/store/SettlementContext'
 import styles from './index.module.scss'
@@ -29,7 +28,7 @@ const RecordsPage: React.FC = () => {
   })
 
   const allRecords = useMemo(() => {
-    return [...localRecords, ...mockSettlementRecords]
+    return localRecords
   }, [localRecords])
 
   const operators = useMemo(() => {
@@ -70,9 +69,11 @@ const RecordsPage: React.FC = () => {
       if (issueFilter === 'hasIssue' && r.summary.issuesCount === 0) return false
       if (issueFilter === 'unresolved' && unresolved === 0) return false
 
-      const totalDiff = r.summary.cashDiff + r.summary.paymentDiff
-      if (diffFilter === 'hasDiff' && totalDiff === 0 && r.summary.issuesCount === 0) return false
-      if (diffFilter === 'noDiff' && (totalDiff !== 0 || r.summary.issuesCount > 0)) return false
+      const hasCashDiff = r.summary.cashDiff !== 0
+      const hasPaymentDiff = r.summary.paymentDiff !== 0
+      const hasAnyDiff = hasCashDiff || hasPaymentDiff
+      if (diffFilter === 'hasDiff' && !hasAnyDiff) return false
+      if (diffFilter === 'noDiff' && hasAnyDiff) return false
 
       return true
     })
@@ -81,7 +82,7 @@ const RecordsPage: React.FC = () => {
   const stats = useMemo(() => {
     const total = allRecords.length
     const perfect = allRecords.filter(r =>
-      r.summary.cashDiff === 0 && r.summary.paymentDiff === 0 && r.summary.issuesCount === 0
+      r.summary.cashDiff === 0 && r.summary.paymentDiff === 0
     ).length
     const withIssue = allRecords.filter(r => r.summary.issuesCount > 0).length
     const unresolvedTotal = allRecords.reduce((sum, r) => sum + getUnresolvedIssueCount(r), 0)
@@ -123,10 +124,19 @@ const RecordsPage: React.FC = () => {
     })
   }
 
+  const handleGoWorkbench = () => {
+    Taro.navigateTo({ url: '/pages/morning-workbench/index' })
+  }
+
   return (
     <View className={styles.pageContainer}>
       <View className={styles.summaryHeader}>
-        <Text className={styles.summaryTitle}>本月交班概览</Text>
+        <View className={styles.summaryHeaderTop}>
+          <Text className={styles.summaryTitle}>交班记录</Text>
+          <Button className={styles.workbenchBtn} onClick={handleGoWorkbench}>
+            ☀️ 早班工作台
+          </Button>
+        </View>
         <View className={styles.summaryStats}>
           <View className={styles.stat}>
             <Text className={styles.statValue}>{stats.total}</Text>

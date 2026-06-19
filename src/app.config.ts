@@ -4,7 +4,8 @@ export default defineAppConfig({
     'pages/settlement/index',
     'pages/records/index',
     'pages/mine/index',
-    'pages/record-detail/index'
+    'pages/record-detail/index',
+    'pages/morning-workbench/index'
   ],
   window: {
     backgroundTextStyle: 'light',
